@@ -64,7 +64,7 @@ function buildBarChart(sampleId){
           //Create the lable for the plot
           var layout = {
             title: {
-                text: "To 10 OTUs found in belly button " + sampleId
+                text: "Top 10 OTUs found in belly button " + sampleId
             }
           }
 
