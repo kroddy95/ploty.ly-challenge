@@ -103,7 +103,7 @@ function buildBubbleChart(sampleId){
           var layout = {
             xaxis: {
                 title: {
-                    text: "OTU for " + sampleId
+                    text: "OTUs for " + sampleId
                 }
             }
           }
