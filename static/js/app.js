@@ -82,7 +82,7 @@ function buildBubbleChart(sampleId){
         var otuIDs = filteredData.map(s => s.otu_ids);
         var otuSampleValues = filteredData.map(s => s.sample_values);
         var otuLabels = filteredData.map(s => s.otu_labels);
-        
+
         //Set up the data information for the plot
         var data = [{
             x: otuIDs[0],
@@ -138,11 +138,10 @@ function buildGuageChart(sampleId) {
             domain: { x: [0,1], y:[0,1]},
             value: wfreq,
             title: {text: "Belly Button Washing Frequency", font: {size: 18}},
-            subtitle: {text: "Scrubs per Week", font: {size: 15}},
             type: "indicator",
             mode: "gauge+number",
             gauge: {
-                axis: {range: [0, 9]},
+                axis: {range: [0, 10], dtick: 2},
                 bar: {color: "steelblue"}} 
         }];
 
