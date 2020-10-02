@@ -1,7 +1,7 @@
 
 var jsonFile = "../data/samples.json";
 
-function initDashboard() {
+function init() {
 
     //Get the dropdown on the page and fill with the sample ids from the json
     var dropdown = d3.select("#selDataset");
@@ -13,13 +13,12 @@ function initDashboard() {
             dropdown.append("option").text(id).property("value", id);
         });
 
-        //Call the functions to build the dashboard for first id in the list
+         //Call the functions to build the dashboard for first id in the list
         buildBarChart(sampleIds[0]);
         buildBubbleChart(sampleIds[0]);
         buildDemographics(sampleIds[0]);
-
+        buildGuageChart(sampleIds[0]);
     });
-
 }
 
 function optionChanged(sampleId) {
@@ -28,16 +27,16 @@ function optionChanged(sampleId) {
     buildBarChart(sampleId);
     buildBubbleChart(sampleId);
     buildDemographics(sampleId);
+    buildGuageChart(sampleId);
   }
 
 
 function buildBarChart(sampleId){
 
-    d3.json(jsonFile).then(function(sampleData) {
+    d3.json(jsonFile).then((sampleData) => {
 
-        //Get just the bacteria for the selected test subject
-        var bacteria = sampleData.samples;
-        var filteredData = bacteria.filter(sampleData => sampleData.id == sampleId);
+        //Get just the samples for the selected test subject
+        var filteredData = sampleData.samples.filter(sampleData => sampleData.id == sampleId);
 
         //sample_values is the bar chart values, otu_ids is the label, out_lables is hovertext
         var otuIDs = filteredData.map(sampleData => sampleData.otu_ids);
@@ -52,7 +51,7 @@ function buildBarChart(sampleId){
         //We need the y axis to include "OTU ID" with each id
         var otuID10str = otuID10.map(otuId => "OTU ID " + otuId);
 
-        //Create data for plot
+        //Create data for the plot
         var data = [{
             type: 'bar',
             x: otuSampleValues10.reverse(),
@@ -75,11 +74,10 @@ function buildBarChart(sampleId){
 
 function buildBubbleChart(sampleId){
 
-    d3.json(jsonFile).then(function(sampleData) {
+    d3.json(jsonFile).then((sampleData) => {
 
-        //Get just the bacteria for the selected test subject
-        var bacteria = sampleData.samples;
-        var filteredData = bacteria.filter(sampleData => sampleData.id == sampleId);
+        //Get just the samples for the selected test subject
+        var filteredData = sampleData.samples.filter(sampleData => sampleData.id == sampleId);
 
         // otu_ids is x values and marker size, sample_values is y values, otu_labels is text values
         var otuIDs = filteredData.map(sampleData => sampleData.otu_ids);
@@ -95,7 +93,6 @@ function buildBubbleChart(sampleId){
             marker: {
               size: otuSampleValues[0],
               color: otuIDs[0]
-              
             }
           }];
 
@@ -114,13 +111,10 @@ function buildBubbleChart(sampleId){
 }
 
 function buildDemographics(sampleId) {
-    d3.json(jsonFile).then(function(sampleData) {
+    d3.json(jsonFile).then((sampleData) => {
         
-        //Get just the meta data out of the json file
-        var samplemetadata = sampleData.metadata;
-
-        //Filter for just the id sent in
-        var filterdata = samplemetadata.filter(sampleData => sampleData.id == sampleId)
+        //Get just the meta data out of the json file and filter for id sent in
+        var filterdata = sampleData.metadata.filter(sampleData => sampleData.id == sampleId)
 
         //Get the metadata panel on the page and clear it out
         var sampleMetadata = d3.select("#sample-metadata");
@@ -134,4 +128,27 @@ function buildDemographics(sampleId) {
     });
 }
 
-initDashboard();
+function buildGuageChart(sampleId) {
+
+    d3.json(jsonFile).then((sampleData) => {
+
+        //Get the washing frequency, which is in the metadata
+        var filteredData = sampleData.metadata.filter(md => md.id == sampleId);
+        var wfreq = filteredData[0].wfreq;
+
+        //Create the data for the gauge
+        var data= [{
+            domain: { x: [0,1], y:[0,1]},
+            value: wfreq,
+            title: {text: "Belly Button Washing Frequency"},
+            type: "indicator",
+            mode: "gauge+number",
+            gauge: {bar: {color: "steelblue"}} 
+        }];
+
+        Plotly.newPlot("gauge", data);
+    });
+}
+
+//Initialize the page
+init();
