@@ -63,7 +63,7 @@ function buildBarChart(sampleId){
           //Create the lable for the plot
           var layout = {
             title: {
-                text: "Top 10 OTUs found in belly button " + sampleId
+                text: "Top 10 bacteria cultures found"
             }
           }
 
@@ -99,7 +99,7 @@ function buildBubbleChart(sampleId){
           var layout = {
             xaxis: {
                 title: {
-                    text: "OTUs for " + sampleId
+                    text: "OTUs"
                 }
             }
           }
@@ -137,10 +137,13 @@ function buildGuageChart(sampleId) {
         var data= [{
             domain: { x: [0,1], y:[0,1]},
             value: wfreq,
-            title: {text: "Belly Button Washing Frequency"},
+            title: {text: "Belly Button Washing Frequency", font: {size: 18}},
+            subtitle: {text: "Scrubs per Week", font: {size: 15}},
             type: "indicator",
             mode: "gauge+number",
-            gauge: {bar: {color: "steelblue"}} 
+            gauge: {
+                axis: {range: [0, 9]},
+                bar: {color: "steelblue"}} 
         }];
 
         Plotly.newPlot("gauge", data);
